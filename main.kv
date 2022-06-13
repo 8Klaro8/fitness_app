@@ -1,9 +1,13 @@
+#:include kv/homescreen.kv
+#:include kv/settingsscreen.kv
 
 GridLayout:
     cols: 1
-    Button:
-        text: "Hello world!"
-    Button:
-        text: "I love you"
-        on_release:
-            print("I love you too")
+    ScreenManager:
+        id: screen_manager
+        HomeScreen:
+            name: "home_screen"
+            id: home_screen
+        SettingsScreen:
+            name: "settings_screen"
+            id: settings_screen

@@ -1,0 +1,78 @@
+#:import utils kivy.utils
+
+<HomeScreen>:
+    FloatLayout:
+        canvas:
+            Color:
+                rgb: utils.get_color_from_hex("#39B3F2")
+            Rectangle:
+                size: self.size
+                pos: self.pos
+        GridLayout:
+            # Put two weather icon here
+            rows: 1
+            pos_hint: {"top": 1, "left": 1}
+            size_hint: 1, .1
+            Image:
+                source: "icons/icons8-sunrise-48.png"
+            Image:
+                source: "icons/icons8-sun-64.png"
+        GridLayout:
+            # Two weather icons and avatar
+            rows: 1
+            pos_hint: {"top": .9, "left": 1}
+            size_hint: 1, .2
+            Image:
+                source: "icons/sunset.png"
+            Image:
+                source: "icons/avatar_pic.png"
+                id: avatar_image
+            Image:
+                source: "icons/cresent_moon.png"
+        Label:
+            # Streak Label
+            pos_hint: {"top": .7, "left": 1}
+            size_hint: 1, .1
+            text: ""
+            id: streak_label
+        GridLayout:
+            # Banner grid
+            id: banner_grid
+            cols: 1
+            pos_hint: {"top": .6, "left": 1}
+            size_hint: 1, .4
+        GridLayout:
+            # Add 3 menu buttons here
+            rows: 1
+            pos_hint: {"top": .2, "left": 1}
+            size_hint: 1, .2
+            ImageButton:
+                source: "icons/add_friend.png"
+                on_release:
+                    print("Add friend button")
+            ImageButton:
+                source: "icons/workout-001.png"
+                on_release:
+                    print("workout button")
+            ImageButton:
+                source: "icons/nutrition.png"
+                on_release:
+                    print("nutrition button")
+
+
+
+
+
+
+
+
+
+
+
+
+    #Button:
+    #    text:
+    #        "You are at the home screen"
+    #    on_release:
+    #        app.change_screen("settings_screen")
+    #        root.manager.transition.direction = 'left'
