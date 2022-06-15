@@ -8,39 +8,25 @@
             Rectangle:
                 size: self.size
                 pos: self.pos
-        GridLayout:
-            # Put two weather icon here
-            rows: 1
-            pos_hint: {"top": 1, "left": 1}
-            size_hint: 1, .1
-            Image:
-                source: "icons/icons8-sunrise-48.png"
-            Image:
-                source: "icons/icons8-sun-64.png"
-        GridLayout:
-            # Two weather icons and avatar
-            rows: 1
-            pos_hint: {"top": .9, "left": 1}
-            size_hint: 1, .2
-            Image:
-                source: "icons/sunset.png"
-            Image:
-                source: "icons/avatar_pic.png"
-                id: avatar_image
-            Image:
-                source: "icons/cresent_moon.png"
         Label:
             # Streak Label
-            pos_hint: {"top": .7, "left": 1}
+            pos_hint: {"top": 1, "left": 1}
             size_hint: 1, .1
             text: ""
             id: streak_label
-        GridLayout:
-            # Banner grid
-            id: banner_grid
-            cols: 1
-            pos_hint: {"top": .6, "left": 1}
-            size_hint: 1, .4
+        ScrollView:
+            pos_hint: {"top": .9, "left": 1}
+            size_hint: 1, .7
+            GridLayout:
+                # Banner grid
+                spacing: 10,10
+                id: banner_grid
+                size_hint_y: None
+                cols: 1
+                height: self.minimum_height
+                row_default_height: '100dp'
+                row_force_default: True
+
         GridLayout:
             # Add 3 menu buttons here
             rows: 1
@@ -55,17 +41,10 @@
                 on_release:
                     print("workout button")
             ImageButton:
-                source: "icons/nutrition.png"
+                source: "icons/settings.png"
                 on_release:
-                    print("nutrition button")
-
-
-
-
-
-
-
-
+                    app.change_screen("settings_screen")
+                    root.manager.transition.direction = 'left'
 
 
 

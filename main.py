@@ -4,6 +4,7 @@ from kivy.uix.screenmanager import Screen
 from kivy.uix.button import ButtonBehavior
 from kivy.uix.image import Image
 from workout_banner import WorkoutBanner
+from kivy.uix.label import Label
 import requests
 import json
 
@@ -11,6 +12,8 @@ import json
 
 
 class HomeScreen(Screen):
+    pass
+class LabelButton(ButtonBehavior, Label):
     pass
 class ImageButton(ButtonBehavior, Image):
     pass
@@ -33,7 +36,7 @@ class MainApp(App):
         print(data)
 
         # Get and update avatar image
-        avatar_image = self.root.ids['home_screen'].ids['avatar_image']
+        avatar_image = self.root.ids['avatar_image']
         avatar_image.source = "icons/" + data['avatar']
         workouts = data['workouts'][1:]
 
@@ -41,13 +44,21 @@ class MainApp(App):
         streak_label = self.root.ids['home_screen'].ids['streak_label']
         streak_label.text = str(data['streak']) + ' Day Streak!'
 
+        # Get and update friend ID label
+        friend_id_label = self.root.ids['settings_screen'].ids['friend_id_label']
+        friend_id_label.text = 'Friend ID: ' + str(data['friend_id_label'])
+
+
         # Get banner grid
         banner_grid = self.root.ids['home_screen'].ids['banner_grid']
 
         for workout in workouts:
-            # Populate workout grid in home screen
-            w = WorkoutBanner(workout_image=workout['workout_image'], description=workout['description'])
-            banner_grid.add_widget(w)
+            for i in range(5):
+                # Populate workout grid in home screen
+                w = WorkoutBanner(workout_image=workout['workout_image'], description=workout['description'],
+                                  type_image=workout['type_image'], number=workout['number'], units=workout['units'],
+                                  likes=workout['likes'])
+                banner_grid.add_widget(w)
 
     def change_screen(self, screen_name):
 
