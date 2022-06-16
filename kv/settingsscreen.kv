@@ -16,15 +16,15 @@
         ImageButton:
             size_hint: 0.5, .4
             pos_hint: {"top": .9, "left": 1}
-            source: "icons/avatar_pic.png"
+            source: "avatars/avatar_pic.png"
             on_release:
-                print("Change Avatar")
+                app.change_screen("change_avatar_screen")
         LabelButton:
-            size_hint: 0.5, .4
-            pos_hint: {"top": .9, "right": 1}
+            size_hint: .3, .4
+            pos_hint: {"top": .9, "right": .8}
             text: "Change Avatar"
             on_release:
-                print("Change Avatar")
+                app.change_screen("change_avatar_screen")
 
         ImageButton:
             size_hint: 0.5, .4
@@ -33,8 +33,8 @@
             on_release:
                 print("Add friend")
         LabelButton:
-            size_hint: 0.5, .4
-            pos_hint: {"top": .7, "right": 1}
+            size_hint: .3, .4
+            pos_hint: {"top": .7, "right": .8}
             text: "Add Friend"
             on_release:
                 print("Add Friend")

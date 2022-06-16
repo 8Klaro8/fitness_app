@@ -7,6 +7,9 @@ from workout_banner import WorkoutBanner
 from kivy.uix.label import Label
 import requests
 import json
+from os import walk
+from functools import partial
+from myfirebase import MyFireBase
 
 # Learning source: https://www.youtube.com/watch?v=rnzRnzEZu40&list=PLy5hjmUzdc0lo7EJM0UDMMN35nWqb3_Ei&index=5
 
@@ -17,6 +20,10 @@ class LabelButton(ButtonBehavior, Label):
     pass
 class ImageButton(ButtonBehavior, Image):
     pass
+class ChangeAvatarScreen(Screen):
+    pass
+class LoginScreen(Screen):
+    pass
 
 class SettingsScreen(Screen):
     pass
@@ -26,6 +33,7 @@ GUI = Builder.load_file('main.kv')
 class MainApp(App):
     my_friend_id = 1
     def build(self):
+        self.my_firebase = MyFireBase()
         return GUI
 
     def on_start(self):
@@ -37,8 +45,15 @@ class MainApp(App):
 
         # Get and update avatar image
         avatar_image = self.root.ids['avatar_image']
-        avatar_image.source = "icons/" + data['avatar']
+        avatar_image.source = "avatars/" + data['avatar']
         workouts = data['workouts'][1:]
+
+        # Populate avatar grid
+        avatar_grid = self.root.ids['change_avatar_screen'].ids['avatar_grid']
+        for root_dir, folder, file in walk("avatars"):
+            for f in file:
+                img = ImageButton(source="avatars/" + f, on_release=partial(self.change_avatar, f))
+                avatar_grid.add_widget(img)
 
         # Get and update streak label
         streak_label = self.root.ids['home_screen'].ids['streak_label']
@@ -68,6 +83,18 @@ class MainApp(App):
         # Sets the current screen to the screen that was passed
         # in as parameter in homescreen.kv - app.change_screen
         screen_manager.current = screen_name
+
+    def change_avatar(self, image, widget_id):
+        # Change avatar in the app
+        current_avatar_image = self.root.ids['avatar_image']
+        current_avatar_image.source = "avatars/" + image
+
+        # Change avatar in Firebase
+        my_data = '{"avatar": "%s"}' % image
+        requests.patch(
+            'https://friendly-fitness-9b323-default-rtdb.firebaseio.com/' + f'{str(self.my_friend_id)}' + '.json', data=my_data)
+        self.change_screen("settings_screen")
+
 
 MainApp().run()
 
