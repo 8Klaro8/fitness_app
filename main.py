@@ -37,16 +37,6 @@ class MainApp(App):
         return GUI
 
     def on_start(self):
-        # Get database data
-        result = requests.get(
-            'https://friendly-fitness-9b323-default-rtdb.firebaseio.com/' + f'{str(self.my_friend_id)}' + '.json')
-        data = result.json()
-        print(data)
-
-        # Get and update avatar image
-        avatar_image = self.root.ids['avatar_image']
-        avatar_image.source = "avatars/" + data['avatar']
-        workouts = data['workouts'][1:]
 
         # Populate avatar grid
         avatar_grid = self.root.ids['change_avatar_screen'].ids['avatar_grid']
@@ -55,25 +45,50 @@ class MainApp(App):
                 img = ImageButton(source="avatars/" + f, on_release=partial(self.change_avatar, f))
                 avatar_grid.add_widget(img)
 
-        # Get and update streak label
-        streak_label = self.root.ids['home_screen'].ids['streak_label']
-        streak_label.text = str(data['streak']) + ' Day Streak!'
+        # Try to read the persisten signin credentials (refresh token)
+        try:
+            with open("refresh_token.txt", 'r') as f:
+                refresh_token = f.read()
 
-        # Get and update friend ID label
-        friend_id_label = self.root.ids['settings_screen'].ids['friend_id_label']
-        friend_id_label.text = 'Friend ID: ' + str(data['friend_id_label'])
+            # Use refresh token to get a new idToken
+            id_token, local_id = self.my_firebase.exchange_refresh_token(refresh_token)
 
+            # Get database data
+            result = requests.get(
+                'https://friendly-fitness-9b323-default-rtdb.firebaseio.com/' + local_id + '.json?auth=' + id_token)
+            data = json.loads(result.content.decode())
+            print(f'data: {data}')
+            print("WAS OK?" + f'{result.ok}')
 
-        # Get banner grid
-        banner_grid = self.root.ids['home_screen'].ids['banner_grid']
+            # Get and update avatar image
+            avatar_image = self.root.ids['avatar_image']
+            avatar_image.source = "avatars/" + data['avatar']
+            workouts = data['workouts'][1:]
 
-        for workout in workouts:
-            for i in range(5):
-                # Populate workout grid in home screen
-                w = WorkoutBanner(workout_image=workout['workout_image'], description=workout['description'],
-                                  type_image=workout['type_image'], number=workout['number'], units=workout['units'],
-                                  likes=workout['likes'])
-                banner_grid.add_widget(w)
+            # Get and update streak label
+            streak_label = self.root.ids['home_screen'].ids['streak_label']
+            streak_label.text = str(data['streak']) + ' Day Streak!'
+
+            # Get and update friend ID label
+            friend_id_label = self.root.ids['settings_screen'].ids['friend_id_label']
+            friend_id_label.text = 'Friend ID: ' + str(data['friend_id_label'])
+
+            # Get banner grid
+            banner_grid = self.root.ids['home_screen'].ids['banner_grid']
+            for workout in workouts:
+                for i in range(5):
+                    # Populate workout grid in home screen
+                    w = WorkoutBanner(workout_image=workout['workout_image'], description=workout['description'],
+                                      type_image=workout['type_image'], number=workout['number'], units=workout['units'],
+                                      likes=workout['likes'])
+                    banner_grid.add_widget(w)
+
+            self.change_screen('home_screen')
+
+        except Exception as e:
+            print(e)
+            pass
+
 
     def change_screen(self, screen_name):
 
