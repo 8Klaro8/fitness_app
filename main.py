@@ -10,6 +10,9 @@ import json
 from os import walk
 from functools import partial
 from myfirebase import MyFireBase
+# import os
+# from dotenv import load_dotenv
+# load_dotenv()
 
 # Learning source: https://www.youtube.com/watch?v=rnzRnzEZu40&list=PLy5hjmUzdc0lo7EJM0UDMMN35nWqb3_Ei&index=5
 
@@ -56,14 +59,17 @@ class MainApp(App):
             # Get database data
             result = requests.get(
                 'https://friendly-fitness-9b323-default-rtdb.firebaseio.com/' + local_id + '.json?auth=' + id_token)
-            data = json.loads(result.content.decode())
+            data = result.json()
             print(f'data: {data}')
             print("WAS OK?" + f'{result.ok}')
 
             # Get and update avatar image
             avatar_image = self.root.ids['avatar_image']
             avatar_image.source = "avatars/" + data['avatar']
+            print(f'avatar image source: {avatar_image.source}')
             workouts = data['workouts'][1:]
+            print('here')
+            quit()
 
             # Get and update streak label
             streak_label = self.root.ids['home_screen'].ids['streak_label']
@@ -72,7 +78,6 @@ class MainApp(App):
             # Get and update friend ID label
             friend_id_label = self.root.ids['settings_screen'].ids['friend_id_label']
             friend_id_label.text = 'Friend ID: ' + str(data['friend_id_label'])
-
             # Get banner grid
             banner_grid = self.root.ids['home_screen'].ids['banner_grid']
             for workout in workouts:
@@ -86,7 +91,7 @@ class MainApp(App):
             self.change_screen('home_screen')
 
         except Exception as e:
-            print(e)
+            print(f'Something wrong with: {e}')
             pass
 
 

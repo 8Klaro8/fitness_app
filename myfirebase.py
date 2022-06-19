@@ -1,11 +1,14 @@
 import requests
 import json
 from kivy.app import App
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 
 
 class MyFireBase():
-    wak = 'AIzaSyCmDTaaINrZtn6HmA-Kb9hTgnBCaZmEABM'   # web api key
+    wak = os.environ.get('wak')   # web api key
     def sign_up(self, email, password):
         app = App.get_running_app()
         # Send email and password to firebase
