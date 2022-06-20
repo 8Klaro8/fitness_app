@@ -54,11 +54,12 @@ class MainApp(App):
                 refresh_token = f.read()
 
             # Use refresh token to get a new idToken
-            id_token, local_id = self.my_firebase.exchange_refresh_token(refresh_token)
+            id_token_1, id_token_2, local_id = self.my_firebase.exchange_refresh_token(refresh_token)
+
 
             # Get database data
             result = requests.get(
-                'https://friendly-fitness-9b323-default-rtdb.firebaseio.com/' + local_id + '.json?auth=' + id_token)
+                'https://friendly-fitness-9b323-default-rtdb.firebaseio.com/' + local_id + '.json?auth=' + id_token_1 + id_token_2)
             data = result.json()
             print(f'data: {data}')
             print("WAS OK?" + f'{result.ok}')
@@ -69,7 +70,7 @@ class MainApp(App):
             print(f'avatar image source: {avatar_image.source}')
             workouts = data['workouts'][1:]
             print('here')
-            quit()
+            # quit()
 
             # Get and update streak label
             streak_label = self.root.ids['home_screen'].ids['streak_label']

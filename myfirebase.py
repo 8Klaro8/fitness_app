@@ -20,6 +20,8 @@ class MyFireBase():
         if signup_request.ok == True:
             # Get localId, refreshToken, idToken
             idToken = json.loads(signup_request.content.decode())['idToken']
+            idToken_1 = idToken[:len(idToken) // 2]
+            idToken_2 = idToken[len(idToken) // 2:]
             refresh_token = json.loads(signup_request.content.decode())['refreshToken']
             localId = json.loads(signup_request.content.decode())['localId']
 
@@ -29,7 +31,7 @@ class MyFireBase():
 
             # Save localId, idToken to app
             app.local_id = localId
-            app.id_token = idToken
+            app.id_token = idToken_1 + idToken_2
 
 
             # Create new key in database with localId
@@ -37,9 +39,9 @@ class MyFireBase():
             # Default avatar
             # Friends list
             # Empty workouts are
-            my_data = '{"avatar": "avatar_pic.png", "friends": "", "workouts": ""}'
+            my_data = '{"avatar": "avatar_pic_girl.png", "friends": "", "workouts": ""}'
             my_patch = requests.patch(
-                'https://friendly-fitness-9b323-default-rtdb.firebaseio.com/' + localId + '.json?auth=' + idToken,
+                'https://friendly-fitness-9b323-default-rtdb.firebaseio.com/' + localId + '.json?auth=' + idToken_1 + idToken_2,
             data=my_data)
             print(my_patch.ok)
             print(json.loads(my_patch.content.decode()))
@@ -64,4 +66,8 @@ class MyFireBase():
         local_id = refresh_req.json()['user_id']
         id_token = refresh_req.json()['id_token']
 
-        return local_id, id_token
+        id_token_1 = id_token[:len(id_token) // 2]
+        id_token_2 = id_token[len(id_token) // 2:]
+
+
+        return local_id, id_token_1, id_token_2

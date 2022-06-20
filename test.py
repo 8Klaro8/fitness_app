@@ -8,7 +8,7 @@ vmi = 'AIwUaOlII_HvDRbUBumXGiyk66Y_Hk18CRxBA9tuShqGS9cWYAqHp1ZC6c-eG0H5bBP-71qXC
 
 
 counter = 0
-for i in vmi:
+for i in id_token:
     counter += 1
 print(counter)
 
