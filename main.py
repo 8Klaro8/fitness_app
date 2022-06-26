@@ -7,14 +7,18 @@ from workout_banner import WorkoutBanner
 from kivy.uix.label import Label
 import requests
 import json
+import os
 from os import walk
 from functools import partial
 from myfirebase import MyFireBase
+from firebase_admin import db
 # import os
 # from dotenv import load_dotenv
 # load_dotenv()
 
 # Learning source: https://www.youtube.com/watch?v=rnzRnzEZu40&list=PLy5hjmUzdc0lo7EJM0UDMMN35nWqb3_Ei&index=5
+
+PRIVATE_KEY_PATH = os.getenv('PRIVATE_KEY_PATH')
 
 
 class HomeScreen(Screen):
@@ -41,6 +45,12 @@ class MainApp(App):
 
     def on_start(self):
 
+        # ref = db.reference(
+        #     'https://friendly-fitness-9b323-default-rtdb.firebaseio.com/'
+        # )
+        # print(ref.get())
+        # quit()
+
         # Populate avatar grid
         avatar_grid = self.root.ids['change_avatar_screen'].ids['avatar_grid']
         for root_dir, folder, file in walk("avatars"):
@@ -54,12 +64,12 @@ class MainApp(App):
                 refresh_token = f.read()
 
             # Use refresh token to get a new idToken
-            id_token_1, id_token_2, local_id = self.my_firebase.exchange_refresh_token(refresh_token)
+            id_token, local_id = self.my_firebase.exchange_refresh_token(refresh_token)
 
 
             # Get database data
             result = requests.get(
-                'https://friendly-fitness-9b323-default-rtdb.firebaseio.com/' + local_id + '.json?auth=' + id_token_1 + id_token_2)
+                'https://friendly-fitness-9b323-default-rtdb.firebaseio.com/' + local_id + '.json?auth=' + id_token)
             data = result.json()
             print(f'data: {data}')
             print("WAS OK?" + f'{result.ok}')

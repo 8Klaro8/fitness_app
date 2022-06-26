@@ -1,3 +1,55 @@
+from datetime import time
+# from Crypto
+import firebase_admin
+from firebase_admin import db, credentials
+from kivy.app import App
+from firebase import Firebase
+import requests
+import json
+import base64
+import firebase
+import time
+
+
+class MainApp(App):
+    pass
+
+
+
+firebase.dat
+
+# pip uninstall pycrypto, pycryptodome, Crypto, crypto
+
+cred = credentials.Certificate('https://test-project-80109-default-rtdb.firebaseio.com/1/workouts.json')
+firebase_admin.initialize_app(cred)
+
+time.sleep(3)
+
+quit()
+
+
+default_app = firebase_admin.initialize_app()
+request = requests.get(
+    url='https://test-project-80109-default-rtdb.firebaseio.com/.json'
+)
+data = json.loads(request.text)[1]
+print(data)
+
+my_data = {
+    '{"Pull ups": {"lol": "sets"}}'
+}
+# my_data = my_data.encode()
+post = requests.patch(
+    url='https://test-project-80109-default-rtdb.firebaseio.com/1/workouts.json',
+    data=my_data
+)
+
+print(data)
+
+quit()
+
+
+
 
 refresh_token = "AIwUaOlII_HvDRbUBumXGiyk66Y_Hk18CRxBA9tuShqGS9cWYAqHp1ZC6c-eG0H5bBP-71qXCkKl1HhANyBk9MxnWZkfcOBSwhLLcqp7_bWetLHE3s8lx-NEbPKYFk1XSM9fmeRcIk9b6Me0N8UBk9OM4lsUgZJamBBtbGx70oL-eE8jbGrRYZOiYhi-KXuhC-58A6da7UNjra6wlmH-2m8MHDNJZf6jQ1iV8wk-f03SCkaAYBro-hg"
 # More than 768 bytes
